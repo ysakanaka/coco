@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 import numpy as np
 from py4j.java_gateway import JavaGateway, CallbackServerParameters
+from py4j.java_collections import SetConverter, MapConverter, ListConverter
 
 class PythonEval:
     eval_fun_name = None
@@ -15,25 +16,62 @@ class PythonEval:
         self.gateway = gateway
 
     def eval(self, obj):
-        #print("obj", obj)
-        x = None
-        #x = np.empty(PythonEval.dim) ## TODO: check dimensions
-        #np.delete(x, 0)
-        for v in obj:
-            #print("v is", v)
-            x = np.append(x, v)
+         #print("obj", obj)
+         x = None
+         #x = np.empty(PythonEval.dim) ## TODO: check dimensions
+         #np.delete(x, 0)
+         for v in obj:
+             #print("v is", v)
+             x = np.append(x, v)
 
-        x = np.delete(x, 0)
-        #print("x is", x)
+         x = np.delete(x, 0)
+         #print("x is", x)
+         f = None
+         if PythonEval.fun.number_of_constraints > 0:
+             c = PythonEval.fun.constraint(x)# call constraints eval
+             if c <= 0 :
+                 f = PythonEval.fun(x)
+         else:
+             f = PythonEval.fun(x)# eval
+         #print("f is", f)
+         return f
+
+    def eval_all(self, obj):
+        x = None
+        xs = None
+        print(obj)
+        #java_list = ListConverter().convert(obj, self.gateway._gateway_client)
+        for candidates in obj:
+            for val in candidates:
+                x = np.append(x, val)
+                x = np.delete(x, 0)
+            xs = np.append(xs, x)
+        #print("xs", xs)
+        xs = np.delete(xs, 0)
+        #print("xs2", xs)
+
         f = None
-        if PythonEval.fun.number_of_constraints > 0:
-            c = PythonEval.fun.constraint(x)# call constraints eval
-            if c <= 0 :
-                f = PythonEval.fun(x)
-        else:
-            f = PythonEval.fun(x)# eval
-        #print("f is", f)
-        return f
+        fs = []
+        xval = None
+        for c in obj:
+            print("x",c)
+            for v in c:
+                #print("v is", v)
+                xval = np.append(xval, v)
+            xval = np.delete(xval, 0)
+            print("xval", xval)
+            if PythonEval.fun.number_of_constraints > 0:
+                c = PythonEval.fun.constraint(xval)# call constraints eval
+                if c <= 0 :
+                    fs.append(PythonEval.fun(xval)) #???
+            else:
+                fs.append(PythonEval.fun(xval))# eval
+
+            xval = None
+
+        print(fs)
+        java_list = ListConverter().convert(fs, self.gateway._gateway_client)
+        return java_list
 
     def eval_constraint(self, obj):
         eval(PythonEval.eval_constraint_name)(self, obj)
