@@ -26,5 +26,3 @@ def random_search(fun, lbounds, ubounds, budget):
                 x_min, f_min = X[index], F[index]
         budget -= chunk
     return x_min
-
-

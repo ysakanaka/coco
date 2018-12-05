@@ -56,11 +56,11 @@ class PythonEval:
     def set_chunk(self, c):
         PythonEval.chunk = c
 
-    def send_min(self, obj):
+    def send_min(self, obj, count):
         #print("set min", obj)
         PythonEval.x_min = obj
-        PythonEval.budget -= PythonEval.chunk
-        #print("Budget",PythonEval.budget,PythonEval.chunk)
+        PythonEval.budget -= count
+        print("Budget",PythonEval.budget)
         if PythonEval.budget > 0:
             return 1
         else:

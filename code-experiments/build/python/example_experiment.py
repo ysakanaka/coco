@@ -150,8 +150,9 @@ def coco_optimize(solver, fun, max_evals, max_runs=1e9):
         fun(x0)  # can be incommented, if this is done by the solver
 
         if solver.__name__ in ("random_search", ):
-            solver(fun, fun.lower_bounds, fun.upper_bounds,
+            x = solver(fun, fun.lower_bounds, fun.upper_bounds,
                    remaining_evals)
+            print(x)
         elif solver.__name__ == 'fmin' and solver.__globals__['__name__'] in ['cma', 'cma.evolution_strategy', 'cma.es']:
             if x0[0] == center[0]:
                 sigma0 = 0.02
