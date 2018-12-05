@@ -39,7 +39,7 @@ class PythonEval:
     def eval_all(self, obj):
         x = None
         xs = None
-        print(obj)
+        #print(obj)
         #java_list = ListConverter().convert(obj, self.gateway._gateway_client)
         for candidates in obj:
             for val in candidates:
@@ -54,12 +54,12 @@ class PythonEval:
         fs = []
         xval = None
         for c in obj:
-            print("x",c)
+            #print("x",c)
             for v in c:
                 #print("v is", v)
                 xval = np.append(xval, v)
             xval = np.delete(xval, 0)
-            print("xval", xval)
+            #print("xval", xval)
             if PythonEval.fun.number_of_constraints > 0:
                 c = PythonEval.fun.constraint(xval)# call constraints eval
                 if c <= 0 :
@@ -69,7 +69,7 @@ class PythonEval:
 
             xval = None
 
-        print(fs)
+        #print(fs)
         java_list = ListConverter().convert(fs, self.gateway._gateway_client)
         return java_list
 
@@ -94,11 +94,11 @@ class PythonEval:
     def set_chunk(self, c):
         PythonEval.chunk = c
 
-    def send_min(self, obj):
+    def send_min(self, obj, count):
         #print("set min", obj)
         PythonEval.x_min = obj
-        PythonEval.budget -= PythonEval.chunk
-        #print("Budget",PythonEval.budget,PythonEval.chunk)
+        PythonEval.budget -= count
+        #print("Budget",PythonEval.budget, count)
         if PythonEval.budget > 0:
             return 1
         else:
