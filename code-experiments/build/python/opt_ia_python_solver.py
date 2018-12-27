@@ -16,7 +16,46 @@ def opt_IA(fun, lbounds, ubounds, budget):
 
     opt_ia = optIA.OptIA(fun, lbounds, ubounds)
     max_chunk_size = 1 + 4e4 / dim
-    x_min = opt_ia.opt_ia(budget, max_chunk_size)
+    x_min = opt_ia.opt_ia(budget)
+
+    return x_min
+
+def opt_IA_reset_age(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
+
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds, ra=True)
+    max_chunk_size = 1 + 4e4 / dim
+    x_min = opt_ia.opt_ia(budget)
+
+    return x_min
+
+def opt_IA_search_assist(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
+
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds, ssa=True)
+    max_chunk_size = 1 + 4e4 / dim
+    x_min = opt_ia.opt_ia(budget)
+
+    return x_min
+
+def opt_IA_surrogate_assist(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
+
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds, sua = True)
+    max_chunk_size = 1 + 4e4 / dim
+    x_min = opt_ia.opt_ia(budget)
 
     return x_min
 
