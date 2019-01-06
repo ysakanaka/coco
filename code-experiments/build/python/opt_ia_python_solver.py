@@ -1,11 +1,25 @@
 from __future__ import absolute_import, division, print_function
 import numpy as np
 import sys
-from py4j.java_gateway import JavaGateway, CallbackServerParameters
-from py4j.java_collections import SetConverter, MapConverter, ListConverter
-sys.path.append('/Users/ysakanaka/Program/Research/Opt-IA_python')
+
+sys.path.append('/home/ysakanaka/Opt_IA/opt-ia_python')
 import optIA
 
+
+def opt_IA_master(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
+
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds)
+    max_chunk_size = 1 + 4e4 / dim
+
+
+    x_min = opt_ia.opt_ia(budget, max_chunk_size)
+
+    return x_min
 
 def opt_IA(fun, lbounds, ubounds, budget):
     """Efficient implementation of uniform random search between
@@ -15,6 +29,21 @@ def opt_IA(fun, lbounds, ubounds, budget):
     dim, x_min, f_min = len(lbounds), None, None
 
     opt_ia = optIA.OptIA(fun, lbounds, ubounds)
+    max_chunk_size = 1 + 4e4 / dim
+
+
+    x_min = opt_ia.opt_ia(budget)
+
+    return x_min
+
+def opt_IA_random_generation(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
+
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds, sobol=False)
     max_chunk_size = 1 + 4e4 / dim
     x_min = opt_ia.opt_ia(budget)
 

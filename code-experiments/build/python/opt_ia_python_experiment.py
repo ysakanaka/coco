@@ -56,8 +56,9 @@ except NameError: pass
 from cocoex import default_observers  # see cocoex.__init__.py
 from cocoex.utilities import ObserverOptions, ShortInfo, ascetime, print_flush
 from cocoex.solvers import random_search
-sys.path.append('/Users/ysakanaka/Program/Research/Opt-IA_python')
-from opt_ia_python_solver import opt_IA, opt_IA_search_assist, opt_IA_reset_age, opt_IA_surrogate_assist
+
+sys.path.append('/home/ysakanaka/Opt_IA/opt-ia_python')
+from opt_ia_python_solver import opt_IA, opt_IA_search_assist, opt_IA_reset_age, opt_IA_surrogate_assist, opt_IA_random_generation
 
 def default_observer_options(budget_=None, suite_name_=None, current_batch_=None):
     """return defaults computed from input parameters or current global vars
@@ -178,6 +179,8 @@ def coco_optimize(solver, fun, max_evals, max_runs=1e9):
         elif solver.__name__ in ("opt_IA", ):
             x = solver(fun, fun.lower_bounds, fun.upper_bounds, remaining_evals)
             #print(x)
+        elif solver.__name__ in ("opt_IA_random_generation", ):
+            x = solver(fun, fun.lower_bounds, fun.upper_bounds, remaining_evals)
         elif solver.__name__ in ("opt_IA_reset_age", ):
             x = solver(fun, fun.lower_bounds, fun.upper_bounds, remaining_evals)
         elif solver.__name__ in ("opt_IA_search_assist", ):
@@ -220,7 +223,10 @@ current_batch = 1      # 1..number_of_batches
 ##############################################################################
 # By default we call SOLVER(fun, x0), but the INTERFACE CAN BE ADAPTED TO EACH SOLVER ABOVE
 #SOLVER = random_search
+#SOLVER = opt_IA
+#SOLVER = opt_IA_search_assist
 SOLVER = opt_IA_surrogate_assist
+#SOLVER = opt_IA_random_generation
 # SOLVER = optimize.fmin_cobyla
 # SOLVER = my_solver # SOLVER = fmin_slsqp # SOLVER = cma.fmin
 suite_instance = "" # "year:2016"
