@@ -2,7 +2,8 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import sys
 
-sys.path.append('/home/ysakanaka/Opt_IA/opt-ia_python')
+#sys.path.append('/home/ysakanaka/Opt_IA/opt-ia_python')
+sys.path.append('/Users/ysakanaka/Program/Research/Opt-IA_python')
 import optIA
 
 
@@ -88,7 +89,18 @@ def opt_IA_surrogate_assist(fun, lbounds, ubounds, budget):
 
     return x_min
 
+def opt_IA_surrogate_and_search_assist(fun, lbounds, ubounds, budget):
+    """Efficient implementation of uniform random search between
+    `lbounds` and `ubounds`
+    """
+    lbounds, ubounds = np.array(lbounds), np.array(ubounds)
+    dim, x_min, f_min = len(lbounds), None, None
 
+    opt_ia = optIA.OptIA(fun, lbounds, ubounds, ssa = True, sua = True)
+    max_chunk_size = 1 + 4e4 / dim
+    x_min = opt_ia.opt_ia(budget)
+
+    return x_min
 # ===============================================
 # the most basic example solver
 # ===============================================
